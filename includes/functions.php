@@ -1,21 +1,6 @@
 <?php
     // This file handles all database interactions for the Zerek project
-
-    function getUsers($conn){
-        $sql = "SELECT * FROM users";
-        $stmt = mysqli_stmt_init($conn);
-        if(!mysqli_stmt_prepare($stmt,$sql)){
-            echo "<p>Error: Could not load users.</p>";
-            exit();
-        }
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-        mysqli_stmt_close($stmt);
-        return $result;
-    }
-
-    function getUser($conn, $userId){
-        // Changed 'id' to 'user_id' to match your schema
+function getUser($conn, $userId){
         $sql = "SELECT * FROM users WHERE user_id = ?;";
         $stmt = mysqli_stmt_init($conn);
         if(!mysqli_stmt_prepare($stmt,$sql)){
@@ -32,21 +17,19 @@
         } else {
             return false;
         }
-    }
+    } // Ensure this bracket exists!
 
-    // Updated to include 'role' and 'date_of_birth' and remove nationality/age
     function registerUser($conn, $username, $password, $role, $firstName, $lastName, $dob, $email){
-        $sql = "INSERT INTO users (username, password, role, name, surname, date_of_birth, email) VALUES (?,?,?,?,?,?,?);";
+        // Using backticks to prevent the "Unknown Column" error from before
+        $sql = "INSERT INTO users (`username`, `password`, `role`, `name`, `surname`, `date_of_birth`, `email`) VALUES (?, ?, ?, ?, ?, ?, ?);";
+        
         $stmt = mysqli_stmt_init($conn);
-
-        if(!mysqli_stmt_prepare($stmt,$sql)){
+        if(!mysqli_stmt_prepare($stmt, $sql)){
             header("location: ../register.php?error=stmtfailed");
             exit();
         }
 
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-        // "sssssss" means 7 strings (role and date are passed as strings to MySQL)
         mysqli_stmt_bind_param($stmt, "sssssss", $username, $hashedPassword, $role, $firstName, $lastName, $dob, $email);
 
         mysqli_stmt_execute($stmt);
@@ -87,7 +70,7 @@
             header("location: ../login.php?error=stmtfailed");
             exit();
         }
-        mysqli_stmt_bind_param($stmt, "ss", $username, $username);
+        mysqli_stmt_bind_param($stmt,"ss",$username, $email);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
         mysqli_stmt_close($stmt);
@@ -98,6 +81,21 @@
             return false;
         }
     }
+    function updateUser($conn, $userId, $firstName, $lastName, $email, $dob) {
+    // We added date_of_birth = ? to the SQL query
+    $sql = "UPDATE users SET name = ?, surname = ?, email = ?, date_of_birth = ? WHERE user_id = ?;";
+    $stmt = mysqli_stmt_init($conn);
+
+    if (!mysqli_stmt_prepare($stmt, $sql)) {
+        header("location: ../profile.php?error=updatefailed");
+        exit();
+    }
+
+    // "ssssi" means 4 strings and 1 integer (userId)
+    mysqli_stmt_bind_param($stmt, "ssssi", $firstName, $lastName, $email, $dob, $userId);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+}
 
     // Validation functions updated for your fields
     function emptyRegistrationInput($username, $password, $role, $firstName, $lastName, $dob, $email){

@@ -1,7 +1,7 @@
 <?php 
-    require_once "dbh.php";// <--- Connection established here
-    require_once "functions.php";// <--- functions are loaded
-     $conn = connect_db();
+    require_once "dbh.php";     
+    require_once "functions.php";
+
 
     if(!isset($_POST["submit"])){
         header("location: ../register.php");
