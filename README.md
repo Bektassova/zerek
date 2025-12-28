@@ -1,178 +1,54 @@
-<?php 
-include "includes/header.php";
-require_once 'includes/dbh.php';
+Zerek - School Management System (SMS)
+Zerek is a web-based educational management platform designed to streamline academic administration. The project focuses on managing the relationship between courses, academic units, and student timetables.
 
-if (!isset($_SESSION["userId"]) || $_SESSION["role"] !== "Admin") {
-    header("location: login.php");
-    exit();
-}
+ Project Overview
+This project was developed as a practical application of PHP and MySQL, focusing on CRUD (Create, Read, Update, Delete) operations, secure database interactions, and a responsive admin dashboard.
 
-// --- 1. ЗАПРОС ДЛЯ ПРАВОЙ ТАБЛИЦЫ (Active Academic Structure) ---
-// Этот запрос получает название юнита, его описание и название курса
-$unitsSql = "SELECT units.unit_name, units.unit_description, courses.course_name 
-             FROM units 
-             LEFT JOIN courses ON units.course_id = courses.course_id 
-             ORDER BY units.unit_name ASC";
-$unitsResult = mysqli_query($conn, $unitsSql);
+Key Features
+1. Academic Structure Management
+Course Creation: Admins can create major courses (e.g., Business Studies, Economics).
 
-// --- 2. ЗАПРОС ДЛЯ ЛЕВОЙ/НИЖНЕЙ ТАБЛИЦЫ (Manage Courses / Dropdown) ---
-// Этот запрос считает количество юнитов для блокировки кнопки Delete и вывода в dropdown
-$coursesSql = "SELECT courses.course_id, courses.course_name, COUNT(units.unit_id) AS unit_count 
-               FROM courses 
-               LEFT JOIN units ON courses.course_id = units.course_id 
-               GROUP BY courses.course_id 
-               ORDER BY courses.course_name ASC";
-$coursesResult = mysqli_query($conn, $coursesSql);
-?>
+Course Protection: Integrated logic prevents the deletion of courses that have active units assigned to them.
 
-<div class="container mt-5">
-    <div class="row">
+Unit Management: A dedicated system to add, edit, and delete academic units (subjects) linked to specific courses.
 
-      <!-- LEFT COLUMN:Create Course<-->
+Description System: Detailed descriptions for each unit to provide clarity on the academic syllabus.
 
-        <div class="col-md-4">
-            
-            <div class="card shadow-sm mb-4 border-primary">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Step 1: Create Course</h5>
-                </div>
-                <div class="card-body">
-                    <form action="includes/admin-course-add-inc.php" method="post">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Course Name</label>
-                            <input type="text" name="course_name" class="form-control" placeholder="e.g. Business Studies" required>
-                        </div>
-                        <button type="submit" name="submit_course" class="btn btn-primary w-100">
-                            Add Course to System
-                        </button>
-                    </form>
-                </div>
-            </div>
+2. Timetable System
+Admin Controls: Ability to create and manage weekly schedules.
 
-            <div class="card shadow-sm mb-4 border-success">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">Step 2: Add Unit to Course</h5>
-                </div>
-                <div class="card-body">
-                    <form action="includes/admin-units-inc.php" method="post">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Unit Name</label>
-                            <input type="text" name="unit_name" class="form-control" placeholder="e.g. Management" required>
-                        </div>
+Student View: A clean interface for students to view their upcoming lessons and timings.
 
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Assign to Course</label>
-                            <select name="course_id" class="form-select" required>
-                                <option value="">-- Select Course --</option>
-                                <?php 
-                                mysqli_data_seek($coursesResult, 0); // Сбрасываем указатель для использования в dropdown
-                                while($course = mysqli_fetch_assoc($coursesResult)): ?>
-                                    <option value="<?php echo $course['course_id']; ?>">
-                                        <?php echo htmlspecialchars($course['course_name']); ?>
-                                    </option>
-                                <?php endwhile; ?>
-                            </select>
-                        </div>
+3. User & Profile Management
+Secure Authentication: Role-based access control for Admins and Students.
 
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Description</label>
-                            <textarea name="unit_description" class="form-control" rows="2"></textarea>
-                        </div>
+Profile Editing: Users can update their personal information and manage account settings.
 
-                        <button type="submit" name="submit" class="btn btn-success w-100">
-                            Link Unit to Course
-                        </button>
-                    </form>
-                </div>
-            </div>
+ Tech Stack
+Frontend: HTML5, CSS3, Bootstrap 5 (for responsive design), FontAwesome (icons).
 
-            <!-- RIGHT COLUMN Правая верхняя таблица (Active Academic Structure)-->
-        </div> <div class="col-md-8">
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-dark text-white">
-                    <h5 class="mb-0">Active Academic Structure</h5>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead>
-                            <tr>
-                                <th>Unit</th>
-                                <th>Course</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php 
-                            // Используем переменную $unitsResult (запрос №1)
-                            while($row = mysqli_fetch_assoc($unitsResult)): 
-                            ?>
-                                <tr>
-                                    <td><strong><?php echo htmlspecialchars($row['unit_name']); ?></strong></td>
-                                    
-                                    <td>
-                                        <span class="badge bg-info text-dark">
-                                            <?php echo htmlspecialchars($row['course_name'] ?? 'Unassigned'); ?>
-                                        </span>
-                                    </td>
-                                    
-                                    <td>
-                                        <small><?php echo htmlspecialchars($row['unit_description']); ?></small>
-                                    </td>
-                                </tr>
-                            <?php endwhile; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>. <!-- END RIGHT COLUMN -->
-        </div>   <!-- END ROW -->
-    </div> <!-- END CONTAINER -->
+Backend: PHP 8.x.
 
-    <!--Manage Courses Section (DELETE)-->
-         <div class="row mt-3">
-        <div class="col-md-8 col-lg-6">
-            <div class="card shadow-sm border-danger mb-5">
-                <div class="card-header bg-danger text-white">
-                    <h5 class="mb-0">Manage Courses (Delete/Clean-up)</h5>
-                </div>
-                <div class="card-body">
-                    <table class="table table-sm">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Course Name</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php 
-                            mysqli_data_seek($coursesResult, 0); // Снова сбрасываем, т.к. использовалось выше
-                            // Используем переменную $coursesResult (запрос №2)
-                            while($c = mysqli_fetch_assoc($coursesResult)): 
-                                $hasUnits = ($c['unit_count'] > 0);
-                            ?>
-                                <tr>
-                                    <td><?php echo $c['course_id']; ?></td>
-                                    <td><?php echo htmlspecialchars($c['course_name']); ?></td>
-                                    <td>
-                                        <?php if ($hasUnits): ?>
-                                            <button class="btn btn-secondary btn-sm" disabled title="Cannot delete: Course has units">
-                                                <i class="fas fa-lock"></i> Locked (<?php echo $c['unit_count']; ?> Units)
-                                            </button>
-                                        <?php else: ?>
-                                            <a href="includes/delete-course-inc.php?id=<?php echo $c['course_id']; ?>" 
-                                               class="btn btn-danger btn-sm" 
-                                               onclick="return confirm('Are you sure you want to delete this empty course?')">
-                                               Delete
-                                            </a>
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
-                            <?php endwhile; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> <?php include "includes/footer.php"; ?>
+Database: MySQL / MariaDB.
 
+Server: MAMP / Localhost.
+
+ Database Architecture
+The project utilizes a relational database with the following core tables:
+
+users: Stores credentials and roles (Admin/Student).
+
+courses: Stores the main academic programs.
+
+units: Stores specific subjects linked to courses (includes unit_description).
+
+timetables: Manages the scheduling logic.
+
+ Installation & Setup
+Clone the repository to your local server directory (e.g., htdocs in MAMP).
+
+Import the zerek_db.sql (or your database file) into phpMyAdmin.
+
+Configure includes/dbh.php with your local database credentials.
+
+Open the project in your browser via localhost/zerek.

@@ -24,7 +24,7 @@
                     <i class="fas fa-user-graduate fa-3x text-primary mb-3"></i>
                     <h5>Manage Students</h5>
                     <p class="small text-muted">Register new students or edit existing student profiles.</p>
-                    <a href="admin-students.php" class="btn btn-primary btn-sm">Enter</a>
+                    <a href="admin-users.php" class="btn btn-primary btn-sm">Enter</a>
                 </div>
             </div>
         </div>
