@@ -52,3 +52,17 @@ Import the zerek_db.sql (or your database file) into phpMyAdmin.
 Configure includes/dbh.php with your local database credentials.
 
 Open the project in your browser via localhost/zerek.
+
+Today I implemented the Student Enrollment Management functionality
+in the Admin Control Panel.
+
+Key features added:
+- Admin can assign a course to each student
+- Students table now supports course_id with foreign key constraint
+- Course filter added to easily view students by course
+- Flash messages added for successful and failed actions
+- Proper session handling and access control for Admin role
+- Cleaned up includes folder structure and fixed routing issues
+
+This brings the project closer to a real-world school management system
+with clear admin workflows and data integrity.

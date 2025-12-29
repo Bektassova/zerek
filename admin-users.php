@@ -2,18 +2,25 @@
 include "includes/header.php";
 require_once 'includes/dbh.php';
 
-// Get selected course from filter (if any)
+/* =========================
+   FILTER BY COURSE
+========================= */
 $selectedCourseId = isset($_GET['course_id']) ? (int)$_GET['course_id'] : 0;
 
-
-// 1. Fetch all students
+/* =========================
+   FETCH STUDENTS
+========================= */
 if ($selectedCourseId > 0) {
     $studentsSql = "
         SELECT * 
         FROM users 
-        WHERE role = 'Student' AND course_id = $selectedCourseId
+        WHERE role = 'Student' AND course_id = ?
         ORDER BY name ASC
     ";
+    $stmt = mysqli_prepare($conn, $studentsSql);
+    mysqli_stmt_bind_param($stmt, "i", $selectedCourseId);
+    mysqli_stmt_execute($stmt);
+    $studentsResult = mysqli_stmt_get_result($stmt);
 } else {
     $studentsSql = "
         SELECT * 
@@ -21,38 +28,38 @@ if ($selectedCourseId > 0) {
         WHERE role = 'Student'
         ORDER BY name ASC
     ";
+    $studentsResult = mysqli_query($conn, $studentsSql);
 }
 
-$studentsResult = mysqli_query($conn, $studentsSql);
-
-
-// 2. Fetch all courses for the dropdown
+/* =========================
+   FETCH COURSES
+========================= */
 $coursesSql = "SELECT * FROM courses ORDER BY course_name ASC";
 $coursesResult = mysqli_query($conn, $coursesSql);
 $allCourses = mysqli_fetch_all($coursesResult, MYSQLI_ASSOC);
 ?>
 
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
     <h2 class="mb-4">Student Enrollment Management</h2>
 
+    <!-- FLASH MESSAGES -->
     <?php if (isset($_SESSION['flash_success'])): ?>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <?php echo $_SESSION['flash_success']; ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-    <?php unset($_SESSION['flash_success']); ?>
-<?php endif; ?>
+        <div class="alert alert-success alert-dismissible fade show">
+            <?php echo $_SESSION['flash_success']; ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <?php unset($_SESSION['flash_success']); ?>
+    <?php endif; ?>
 
-<?php if (isset($_SESSION['flash_error'])): ?>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <?php echo $_SESSION['flash_error']; ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-    <?php unset($_SESSION['flash_error']); ?>
-<?php endif; ?>
+    <?php if (isset($_SESSION['flash_error'])): ?>
+        <div class="alert alert-danger alert-dismissible fade show">
+            <?php echo $_SESSION['flash_error']; ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <?php unset($_SESSION['flash_error']); ?>
+    <?php endif; ?>
 
-
-    <!-- 🔹 FILTER BY COURSE -->
+    <!-- FILTER -->
     <form method="get" class="mb-4">
         <div class="row align-items-end">
             <div class="col-md-4">
@@ -69,72 +76,96 @@ $allCourses = mysqli_fetch_all($coursesResult, MYSQLI_ASSOC);
             </div>
 
             <div class="col-md-2">
-    <button type="submit" class="btn btn-primary w-100">
-        Apply
-    </button>
-</div>
+                <button type="submit" class="btn btn-primary w-100">Apply</button>
+            </div>
 
-<div class="col-md-2">
-    <a href="admin-users.php" class="btn btn-outline-secondary w-100">
-        Reset
-    </a>
-</div>
-
+            <div class="col-md-2">
+                <a href="admin-users.php" class="btn btn-outline-secondary w-100">Reset</a>
+            </div>
         </div>
     </form>
 
-    <!-- ⬇️ ТАБЛИЦА СТУДЕНТОВ -->
-    <div class="card shadow">
-        <div class="card-body">
-            <table class="table table-hover">
-                
-    <div class="card shadow">
-        <div class="card-body">
-            <table class="table table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Student Name</th>
-                        <th>Email</th>
-                        <th>Current Course</th>
-                        <th>Assign New Course</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while($student = mysqli_fetch_assoc($studentsResult)): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($student['name'] . ' ' . $student['surname']); ?></td>
-                       <td><?php echo htmlspecialchars($student['email']); ?></td>
+    <!-- =========================
+         MASS ASSIGN FORM
+    ========================= -->
+    <form action="includes/enroll-students-bulk-inc.php" method="post">
 
-                        <td>
-                            <span class="badge bg-secondary">
-                                <?php 
-                                    // Logic to find current course name
-                                    $currentCourse = "Not Assigned";
-                                    foreach($allCourses as $c) {
-                                        if($c['course_id'] == $student['course_id']) $currentCourse = $c['course_name'];
-                                    }
-                                    echo htmlspecialchars($currentCourse);
-                                ?>
-                            </span>
-                        </td>
-                        <td>
-                            <form action="includes/enroll-student-inc.php" method="post" class="d-flex gap-2">
-                                <input type="hidden" name="user_id" value="<?php echo $student['user_id']; ?>">
-                                <select name="course_id" class="form-select form-select-sm">
-                                    <option value="">-- Select Course --</option>
-                                    <?php foreach($allCourses as $c): ?>
-                                        <option value="<?php echo $c['course_id']; ?>">
-                                            <?php echo htmlspecialchars($c['course_name']); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                                <button type="submit" name="submit_enroll" class="btn btn-primary btn-sm">Assign</button>
-                            </form>
-                        </td>
-                    </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
+        <div class="card shadow">
+            <div class="card-body">
+                <table class="table table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th><input type="checkbox" id="selectAll"></th>
+                            <th>Student Name</th>
+                            <th>Email</th>
+                            <th>Current Course</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <?php while ($student = mysqli_fetch_assoc($studentsResult)): ?>
+                        <tr>
+                            <td>
+                                <input type="checkbox"
+                                       name="student_ids[]"
+                                       value="<?php echo $student['user_id']; ?>">
+                            </td>
+
+                            <td>
+                                <?php echo htmlspecialchars($student['name'] . ' ' . $student['surname']); ?>
+                            </td>
+
+                            <td>
+                                <?php echo htmlspecialchars($student['email']); ?>
+                            </td>
+
+                            <td>
+                                <span class="badge bg-secondary">
+                                    <?php
+                                        $currentCourse = "Not Assigned";
+                                        foreach ($allCourses as $c) {
+                                            if ($c['course_id'] == $student['course_id']) {
+                                                $currentCourse = $c['course_name'];
+                                                break;
+                                            }
+                                        }
+                                        echo htmlspecialchars($currentCourse);
+                                    ?>
+                                </span>
+                            </td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+
+                <!-- MASS ASSIGN CONTROLS -->
+                <div class="d-flex gap-2 mt-3">
+                    <select name="course_id" class="form-select w-auto" required>
+                        <option value="">-- Select course --</option>
+                        <?php foreach ($allCourses as $c): ?>
+                            <option value="<?php echo $c['course_id']; ?>">
+                                <?php echo htmlspecialchars($c['course_name']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <button type="submit" name="bulk_assign" class="btn btn-success">
+                        Assign selected students
+                    </button>
+                </div>
+
+            </div>
         </div>
-    </div>
+
+    </form>
 </div>
+
+<script>
+document.getElementById('selectAll').addEventListener('change', function () {
+    document.querySelectorAll('input[name="student_ids[]"]').forEach(cb => {
+        cb.checked = this.checked;
+    });
+});
+</script>
+
+<?php include "includes/footer.php"; ?>
