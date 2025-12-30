@@ -103,12 +103,23 @@ $allCourses = mysqli_fetch_all($coursesResult, MYSQLI_ASSOC);
                     </thead>
 
                     <tbody>
-                        <?php while ($student = mysqli_fetch_assoc($studentsResult)): ?>
+                        <?php while ($student = mysqli_fetch_assoc($studentsResult)): ?> 
                         <tr>
+                            <!--  Each checkbox stores the student's current course
+     so we can detect reassignment on submit -->
+     <td>
+    <input type="checkbox"
+           name="student_ids[]"
+           value="<?php echo $student['user_id']; ?>"
+           data-current-course="<?php echo htmlspecialchars($currentCourse); ?>">
+</td>
+
                             <td>
                                 <input type="checkbox"
-                                       name="student_ids[]"
-                                       value="<?php echo $student['user_id']; ?>">
+       name="student_ids[]"
+       value="<?php echo $student['user_id']; ?>"
+       data-current-course="<?php echo htmlspecialchars($currentCourse); ?>">
+
                             </td>
 
                             <td>
@@ -149,17 +160,24 @@ $allCourses = mysqli_fetch_all($coursesResult, MYSQLI_ASSOC);
                         <?php endforeach; ?>
                     </select>
 
-                    <button type="submit" name="bulk_assign" class="btn btn-success">
-                        Assign selected students
-                    </button>
-                </div>
-
-            </div>
-        </div>
-
-    </form>
+<!-- To add an ID to the bulk assign button
+     so JavaScript can intercept the submit action -->
+     <button type="submit"
+name="bulk_assign"
+class="btn btn-success"
+id="bulkAssignBtn">
+Assign selected students
+</button>
 </div>
 
+</div>
+</div>
+
+</form>
+</div>
+
+
+<!--JS работает только при клике на -> selectAll-->
 <script>
 document.getElementById('selectAll').addEventListener('change', function () {
     document.querySelectorAll('input[name="student_ids[]"]').forEach(cb => {
@@ -167,5 +185,44 @@ document.getElementById('selectAll').addEventListener('change', function () {
     });
 });
 </script>
+
+<!-- Before submitting the form, JavaScript checks:
+     - if selected students already have a course
+     - and if a different course is selected
+     If so, a confirmation dialog is shown to prevent accidental reassignment -->
+
+<script>
+document.querySelector('form[action="includes/enroll-students-bulk-inc.php"]')
+    .addEventListener('submit', function (e) {
+
+        const selectedCourse = this.querySelector('select[name="course_id"]');
+        const selectedCourseText = selectedCourse.options[selectedCourse.selectedIndex].text;
+
+        let reassignedStudents = [];
+
+        document.querySelectorAll('input[name="student_ids[]"]:checked').forEach(cb => {
+            const currentCourse = cb.dataset.currentCourse;
+
+            if (currentCourse && currentCourse !== "Not Assigned" && currentCourse !== selectedCourseText) {
+                reassignedStudents.push(
+                    `• ${currentCourse} → ${selectedCourseText}`
+                );
+            }
+        });
+
+        if (reassignedStudents.length > 0) {
+            const message =
+                "Some students are already assigned to another course:\n\n" +
+                reassignedStudents.join("\n") +
+                "\n\nDo you want to reassign them?";
+
+            if (!confirm(message)) {
+                e.preventDefault();
+            }
+        }
+    });
+</script>
+
+
 
 <?php include "includes/footer.php"; ?>
