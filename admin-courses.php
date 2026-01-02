@@ -8,9 +8,9 @@ if (!isset($_SESSION["userId"]) || $_SESSION["role"] !== "Admin") {
     exit();
 }
 
-/* =========================
-   QUERY 1: Active Academic Structure
-   ========================= */
+// =========================
+// QUERY 1: Active Academic Structure
+// =========================
 $unitsSql = "
 SELECT 
     units.unit_id,
@@ -21,12 +21,11 @@ FROM units
 LEFT JOIN courses ON units.course_id = courses.course_id
 ORDER BY units.unit_name ASC
 ";
-
 $unitsResult = mysqli_query($conn, $unitsSql);
 
-/* =========================
-   QUERY 2: Courses + unit count
-   ========================= */
+// =========================
+// QUERY 2: Courses + unit count
+// =========================
 $coursesSql = "
     SELECT 
         courses.course_id,
@@ -46,7 +45,7 @@ $coursesResult = mysqli_query($conn, $coursesSql);
         <!-- LEFT COLUMN -->
         <div class="col-md-4">
 
-            <!-- STEP 1 -->
+            <!-- STEP 1: Create Course -->
             <div class="card shadow-sm mb-4 border-primary">
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0">Step 1: Create Course</h5>
@@ -64,7 +63,7 @@ $coursesResult = mysqli_query($conn, $coursesSql);
                 </div>
             </div>
 
-            <!-- STEP 2 -->
+            <!-- STEP 2: Add Unit to Course -->
             <div class="card shadow-sm mb-4 border-success">
                 <div class="card-header bg-success text-white">
                     <h5 class="mb-0">Step 2: Add Unit to Course</h5>
@@ -119,8 +118,7 @@ $coursesResult = mysqli_query($conn, $coursesSql);
                         </thead>
                         <tbody>
                             <?php 
-                           mysqli_data_seek($coursesResult, 0); // Снова сбрасываем, т.к. использовалось выше
-                            // Используем переменную $coursesResult (запрос №2)
+                            mysqli_data_seek($coursesResult, 0); 
                             while($c = mysqli_fetch_assoc($coursesResult)): 
                                 $hasUnits = ($c['unit_count'] > 0);
                             ?>
@@ -151,54 +149,142 @@ $coursesResult = mysqli_query($conn, $coursesSql);
 
         <!-- RIGHT COLUMN -->
         <div class="col-md-8">
+
+            <!-- FLASH MESSAGE -->
+            <?php if(isset($_SESSION['flash_success'])): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?php echo $_SESSION['flash_success']; ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <?php unset($_SESSION['flash_success']); ?>
+            <?php endif; ?>
+
+            <!-- ACTIVE ACADEMIC STRUCTURE -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-dark text-white">
                     <h5 class="mb-0">Active Academic Structure</h5>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover mb-0">
-                 <thead>
-    <tr>
-        <th>Unit</th>
-        <th>Course</th>
-        <th>Description</th>
-        <th>Action</th> </tr>
-</thead>
-<tbody>
-    <?php while ($row = mysqli_fetch_assoc($unitsResult)): ?>
-        <tr>
-            <td><strong><?php echo htmlspecialchars($row['unit_name']); ?></strong></td>
-            <td>
-                <span class="badge bg-info text-dark">
-                    <?php echo htmlspecialchars($row['course_name'] ?? 'Unassigned'); ?>
-                </span>
-            </td>
-            <td>
-                <small><?php echo htmlspecialchars($row['unit_description']); ?></small>
-            </td>
-         <td class="text-nowrap">
-    <a href="edit-unit.php?id=<?php echo $row['unit_id']; ?>"
-       class="btn btn-sm btn-outline-primary me-2">
-        Edit
-    </a>
+                        <thead>
+                            <tr>
+                                <th>Unit</th>
+                                <th>Course</th>
+                                <th>Description</th>
+                                <th>Lecturers</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php while ($row = mysqli_fetch_assoc($unitsResult)): ?>
+                                <tr>
+                                    <td><strong><?php echo htmlspecialchars($row['unit_name']); ?></strong></td>
+                                    <td>
+                                        <span class="badge bg-info text-dark">
+                                            <?php echo htmlspecialchars($row['course_name'] ?? 'Unassigned'); ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <small><?php echo htmlspecialchars($row['unit_description']); ?></small>
+                                    </td>
+                                    <td>
+                                        <?php
+                             
+// Fetch lecturers assigned to this unit
+$lectQuery = "
+    SELECT l.name, l.surname
+    FROM lecturers l
+    JOIN lecturer_units lu ON l.lecturer_id = lu.lecturer_id
+    WHERE lu.unit_id = ?
+    ORDER BY l.name ASC
+";
+$stmt = mysqli_prepare($conn, $lectQuery);
+mysqli_stmt_bind_param($stmt, "i", $row['unit_id']);
+mysqli_stmt_execute($stmt);
+$lectResult = mysqli_stmt_get_result($stmt);
+$lecturersList = [];
+$seen = [];
+while ($lect = mysqli_fetch_assoc($lectResult)) {
+    $fullName = htmlspecialchars($lect['name'] . ' ' . $lect['surname']);
+    if (!in_array($fullName, $seen)) { // избегаем дубликатов
+        $lecturersList[] = $fullName;
+        $seen[] = $fullName;
+    }
+}
+echo implode(", ", $lecturersList);
+?>
 
-    <a href="includes/delete-unit-inc.php?id=<?php echo $row['unit_id']; ?>"
-       class="btn btn-sm btn-outline-danger"
-       onclick="return confirm('Delete this unit?')">
-        <i class="fas fa-trash-alt"></i> Delete
-    </a>
 </td>
+                                    <td class="text-nowrap">
+                                        <a href="edit-unit.php?id=<?php echo $row['unit_id']; ?>"
+                                           class="btn btn-sm btn-outline-primary me-2">
+                                            Edit
+                                        </a>
 
-
-        </tr>
-    <?php endwhile; ?>
-</tbody>
+                                        <a href="includes/delete-unit-inc.php?id=<?php echo $row['unit_id']; ?>"
+                                           class="btn btn-sm btn-outline-danger"
+                                           onclick="return confirm('Delete this unit?')">
+                                            <i class="fas fa-trash-alt"></i> Delete
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        </tbody>
                     </table>
                 </div>
             </div>
-        </div>
 
-    </div>
-</div>
+            <!-- ASSIGN LECTURERS TO UNIT -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Assign Lecturers to Unit</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="includes/assign-lecturers-inc.php">
+                        <div class="mb-3">
+                            <label for="unit_id" class="form-label fw-bold">Select Unit</label>
+                            <select name="unit_id" id="unit_id" class="form-select" required>
+                                <option value="">-- Select Unit --</option>
+                                <?php
+                                mysqli_data_seek($unitsResult, 0);
+                                while ($unit = mysqli_fetch_assoc($unitsResult)) {
+                                    echo "<option value='{$unit['unit_id']}'>" . htmlspecialchars($unit['unit_name']) . "</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="lecturer_ids" class="form-label fw-bold">Select Lecturer(s)</label>
+                            <select name="lecturer_ids[]" id="lecturer_ids" class="form-select" multiple required>
+                                <?php
+                                $lecturerQuery = "SELECT lecturer_id, name, surname FROM lecturers ORDER BY name ASC";
+                                $lecturerResult = mysqli_query($conn, $lecturerQuery);
+                                while ($lecturer = mysqli_fetch_assoc($lecturerResult)) {
+                                    echo "<option value='{$lecturer['lecturer_id']}'>" . htmlspecialchars($lecturer['name'] . ' ' . $lecturer['surname']) . "</option>";
+                                }
+                                ?>
+                            </select>
+                            <small class="text-muted">Hold Ctrl (Cmd on Mac) to select multiple lecturers.</small>
+                        </div>
+
+                        <button type="submit" name="assign_lecturers" class="btn btn-success w-100">
+                            Assign Lecturer(s)
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- BACK TO ADMIN DASHBOARD -->
+            <div class="d-flex justify-content-end mt-3">
+                <a href="admin-dashboard.php" class="btn btn-primary">
+                    Back to Admin Control Panel
+                </a>
+            </div>
+
+        </div> <!-- END RIGHT COLUMN -->
+
+    </div> <!-- END ROW -->
+</div> <!-- END CONTAINER -->
 
 <?php include "includes/footer.php"; ?>

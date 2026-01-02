@@ -35,7 +35,9 @@
                     <i class="fas fa-book fa-3x text-success mb-3"></i>
                     <h5>Courses & Units</h5>
                     <p class="small text-muted">Create the subjects and units for the semester.</p>
-                    <a href="admin-courses.php" class="btn btn-success btn-sm">Enter</a>
+                   <a href="admin-courses.php" class="btn btn-primary">Manage Courses</a>
+<a href="admin-units.php" class="btn btn-secondary">Manage Units</a>
+
                 </div>
             </div>
         </div>

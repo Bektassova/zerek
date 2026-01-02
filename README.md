@@ -66,3 +66,7 @@ Key features added:
 
 This brings the project closer to a real-world school management system
 with clear admin workflows and data integrity.
+
+Set up PHP CS Fixer for PHP code formatting, fixed admin-unit-enroll.php to correctly enroll students with flash messages without errors, and adjusted form handlers’ redirects to return to the appropriate page after saving changes.
+
+Set up PHP CS Fixer, fixed student enrollment and unit edit/delete flows with flash messages, and ensured all redirects go to the correct admin pages with proper navigation.

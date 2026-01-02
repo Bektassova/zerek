@@ -36,8 +36,9 @@ function getUser($conn, $userId){
         mysqli_stmt_close($stmt);
     }
 
-    function login($conn, $username, $password){
-        $user = userExists($conn, $username);
+    function login($conn, $usernameOrEmail, $password){
+        $user = userExists($conn, $usernameOrEmail);
+         
         if(!$user){
             header("location: ../login.php?error=incorrectlogin");
             exit();
@@ -61,26 +62,33 @@ function getUser($conn, $userId){
         exit();
     }
 
-    function userExists($conn, $username){
-        // Changed id to user_id and added password/role for the login function to use
-       $sql = "SELECT user_id, username, email, password, role FROM users WHERE username = ? OR email = ?;";
+  function userExists($conn, $usernameOrEmail){
+    $sql = "SELECT user_id, username, email, password, role 
+            FROM users 
+            WHERE username = ? OR email = ?;";
 
-        $stmt = mysqli_stmt_init($conn);
-        if(!mysqli_stmt_prepare($stmt,$sql)){
-            header("location: ../login.php?error=stmtfailed");
-            exit();
-        }
-        mysqli_stmt_bind_param($stmt,"ss",$username, $email);
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-        mysqli_stmt_close($stmt);
-
-        if($row = mysqli_fetch_assoc($result)){
-            return $row;
-        } else {
-            return false;
-        }
+    $stmt = mysqli_stmt_init($conn);
+    if(!mysqli_stmt_prepare($stmt,$sql)){
+        header("location: ../login.php?error=stmtfailed");
+        exit();
     }
+
+    // IMPORTANT: the same value twice. ВАЖНО: одно и то же значение два раза
+   mysqli_stmt_bind_param($stmt, "ss", $usernameOrEmail, $usernameOrEmail);
+
+
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+    mysqli_stmt_close($stmt);
+
+    if($row = mysqli_fetch_assoc($result)){
+        return $row;
+    } else {
+        return false;
+    }
+}
+
     function updateUser($conn, $userId, $firstName, $lastName, $email, $dob) {
     // We added date_of_birth = ? to the SQL query
     $sql = "UPDATE users SET name = ?, surname = ?, email = ?, date_of_birth = ? WHERE user_id = ?;";

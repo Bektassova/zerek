@@ -8,28 +8,29 @@ if (!isset($_SESSION["userId"]) || $_SESSION["role"] !== "Admin") {
     exit();
 }
 
-// Check required POST data
+// Required data check
 if (!isset($_POST["unit_id"], $_POST["unit_name"])) {
-    header("location: ../admin-courses.php");
+    header("location: ../admin-units.php");
     exit();
 }
 
-$unitId = (int) $_POST["unit_id"];
-$unitName = $_POST["unit_name"];
-$unitDescription = $_POST["unit_description"] ?? null;
+$unitId      = (int) $_POST['unit_id'];
+$unitName    = trim($_POST['unit_name']);
+$description = trim($_POST['unit_description'] ?? '');
 
-// Update unit
-$sql = "UPDATE units SET unit_name = ?, unit_description = ? WHERE unit_id = ?";
-$stmt = mysqli_stmt_init($conn);
+// Update ONLY what exists in the form
+$sql = "UPDATE units 
+        SET unit_name = ?, unit_description = ?
+        WHERE unit_id = ?";
 
-if (!mysqli_stmt_prepare($stmt, $sql)) {
-    die("SQL error");
-}
-
-mysqli_stmt_bind_param($stmt, "ssi", $unitName, $unitDescription, $unitId);
+$stmt = mysqli_prepare($conn, $sql);
+mysqli_stmt_bind_param($stmt, "ssi", $unitName, $description, $unitId);
 mysqli_stmt_execute($stmt);
-mysqli_stmt_close($stmt);
 
-// Redirect back
-header("location: ../admin-courses.php?status=unitupdated");
+// Flash message
+$_SESSION['flash_success'] = "Unit updated successfully.";
+
+// Redirect to Unit Management
+header("Location: ../admin-units.php");
 exit();
+?>

@@ -20,6 +20,11 @@ if (isset($_GET['id']) && $_SESSION['role'] === 'Admin') {
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
 
+    // Flash message
+    $_SESSION['flash_success'] = "Unit deleted successfully.";
+    header("Location: ../admin-units.php");
+    exit();
+
     // Redirect back after delete
     header("Location: ../admin-courses.php?status=unitdeleted");
     exit();
