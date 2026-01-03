@@ -31,6 +31,9 @@ mysqli_stmt_execute($stmt);
 $_SESSION['flash_success'] = "Unit updated successfully.";
 
 // Redirect to Unit Management
-header("Location: ../admin-units.php");
+$redirectTo = $_POST['redirect_to'] ?? '../admin-units.php';
+
+header("Location: " . $redirectTo);
 exit();
+
 ?>

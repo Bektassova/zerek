@@ -221,11 +221,12 @@ echo implode(", ", $lecturersList);
                                             Edit
                                         </a>
 
-                                        <a href="includes/delete-unit-inc.php?id=<?php echo $row['unit_id']; ?>"
-                                           class="btn btn-sm btn-outline-danger"
-                                           onclick="return confirm('Delete this unit?')">
-                                            <i class="fas fa-trash-alt"></i> Delete
-                                        </a>
+                                     <a href="includes/delete-course-inc.php?id=<?php echo $course['course_id']; ?>&return=admin-courses.php"
+   class="btn btn-sm btn-outline-danger"
+   onclick="return confirm('Delete this course?')">
+   Delete
+</a>
+
                                     </td>
                                 </tr>
                             <?php endwhile; ?>
@@ -233,6 +234,15 @@ echo implode(", ", $lecturersList);
                     </table>
                 </div>
             </div>
+<?php
+// Units for Assign Lecturers form (SEPARATE QUERY!)
+$unitsForAssignSql = "
+    SELECT unit_id, unit_name
+    FROM units
+    ORDER BY unit_name ASC
+";
+$unitsForAssignResult = mysqli_query($conn, $unitsForAssignSql);
+?>
 
             <!-- ASSIGN LECTURERS TO UNIT -->
             <div class="card shadow-sm mb-4">
@@ -243,15 +253,15 @@ echo implode(", ", $lecturersList);
                     <form method="post" action="includes/assign-lecturers-inc.php">
                         <div class="mb-3">
                             <label for="unit_id" class="form-label fw-bold">Select Unit</label>
-                            <select name="unit_id" id="unit_id" class="form-select" required>
-                                <option value="">-- Select Unit --</option>
-                                <?php
-                                mysqli_data_seek($unitsResult, 0);
-                                while ($unit = mysqli_fetch_assoc($unitsResult)) {
-                                    echo "<option value='{$unit['unit_id']}'>" . htmlspecialchars($unit['unit_name']) . "</option>";
-                                }
-                                ?>
-                            </select>
+                           <select name="unit_id" id="unit_id" class="form-select" required>
+    <option value="">-- Select Unit --</option>
+    <?php while ($unit = mysqli_fetch_assoc($unitsForAssignResult)): ?>
+        <option value="<?php echo $unit['unit_id']; ?>">
+            <?php echo htmlspecialchars($unit['unit_name']); ?>
+        </option>
+    <?php endwhile; ?>
+</select>
+
                         </div>
 
                         <div class="mb-3">

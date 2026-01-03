@@ -70,3 +70,14 @@ with clear admin workflows and data integrity.
 Set up PHP CS Fixer for PHP code formatting, fixed admin-unit-enroll.php to correctly enroll students with flash messages without errors, and adjusted form handlers’ redirects to return to the appropriate page after saving changes.
 
 Set up PHP CS Fixer, fixed student enrollment and unit edit/delete flows with flash messages, and ensured all redirects go to the correct admin pages with proper navigation.
+Implemented multi-lecturer assignment to units, updated Active Academic Structure to show assigned lecturers, and ensured proper redirects and flash messages in admin panel.
+
+Continued improving the Admin Panel, focusing on assigning lecturers to units.
+
+Tested and adjusted the Assign Lecturers form, identified issues with duplicates and database insertion.
+
+Worked on redirects and flash messages for Edit/Delete actions in Unit and Course Management to ensure proper navigation.
+
+Reviewed and analyzed foreign key constraint errors related to lecturer assignments.
+
+Planned improvements for Delete Course logic to match the behavior of Unit Management.

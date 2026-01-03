@@ -61,6 +61,8 @@ if (!$unit) {
                 <div class="card-body">
                     <form action="includes/edit-unit-inc.php" method="post">
                         <input type="hidden" name="unit_id" value="<?php echo $unitId; ?>">
+                         <input type="hidden" name="redirect_to"
+           value="<?php echo $_SERVER['HTTP_REFERER'] ?? '../admin-units.php'; ?>">
 
                         <div class="mb-3">
                             <label class="form-label fw-bold">Unit Name</label>

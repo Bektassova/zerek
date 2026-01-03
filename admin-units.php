@@ -50,9 +50,13 @@ $result = mysqli_query($conn, $sql);
                             <td class="text-nowrap text-end">
                                 <div class="d-flex justify-content-end gap-2">
                                     <a href="edit-unit.php?id=<?php echo $unit['unit_id']; ?>" class="btn btn-sm btn-outline-primary">Edit</a>
-                                    <a href="includes/delete-unit-inc.php?id=<?php echo $unit['unit_id']; ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this unit?')">
-                                        Delete
-                                    </a>
+                                    
+                                   <a href="includes/delete-unit-inc.php?id=<?php echo $unit['unit_id']; ?>&return=admin-units.php"
+   class="btn btn-sm btn-outline-danger"
+   onclick="return confirm('Delete this unit?')">
+   Delete
+</a>
+
                                     <a href="admin-unit-enroll.php?unit_id=<?php echo $unit['unit_id']; ?>" class="btn btn-sm btn-outline-success">Enroll Students</a>
                                 </div>
                             </td>
