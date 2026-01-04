@@ -115,13 +115,15 @@ $result = mysqli_stmt_get_result($stmt);
 
                             <!-- FILE -->
                             <td>
-                                <?php if (!empty($assignment['file_path'])): ?>
-                                    <a href="<?php echo htmlspecialchars($assignment['file_path']); ?>" target="_blank">
-                                        View File
-                                    </a>
-                                <?php else: ?>
-                                    —
-                                <?php endif; ?>
+                             <?php   if (!empty($assignment['file_path'])): ?>
+    <a href="uploads/<?php echo htmlspecialchars($assignment['file_path']); ?>" 
+       target="_blank" 
+       class="btn btn-sm btn-info">
+       View File
+    </a>
+<?php else: ?>
+    <span class="text-muted">No file</span>
+<?php endif; ?>
                             </td>
 
                             <!-- CREATED DATE -->
