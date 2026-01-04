@@ -81,3 +81,5 @@ Worked on redirects and flash messages for Edit/Delete actions in Unit and Cours
 Reviewed and analyzed foreign key constraint errors related to lecturer assignments.
 
 Planned improvements for Delete Course logic to match the behavior of Unit Management.
+
+Lecturer Assignment Management: Lecturers can create assignments and upload files for their units. Work is still pending on displaying units in the dropdown, editing and deleting assignments, and ensuring students can view them.

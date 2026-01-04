@@ -107,11 +107,25 @@
                         <div class="card bg-dark text-white shadow">
                             <div class="card-body p-4">
                                 <h4 class="card-title">Lecturer Portal</h4>
-                                <p class="card-text">Welcome back, Professor. You can manage your students or upload new course materials below.</p>
-                                <div class="mt-3">
-                                    <a href="manage-students.php" class="btn btn-info me-2">Manage Students</a>
-                                    <a href="upload-content.php" class="btn btn-light">Upload Resources</a>
-                                </div>
+                                <p class="card-text">
+    Welcome back, Professor. You can manage your students or upload new course materials below.
+</p>
+
+<div class="mt-3 d-flex flex-wrap">
+    <a href="manage-students.php" class="btn btn-info me-2 mb-2 flex-grow-1">
+        Manage Students
+    </a>
+    <a href="upload-content.php" class="btn btn-light me-2 mb-2 flex-grow-1">
+        Upload Resources
+    </a>
+    <a href="create-assignment.php" class="btn btn-success me-2 mb-2 flex-grow-1">
+        Create Assignment
+    </a>
+    <a href="lecturer-assignments.php" class="btn btn-secondary mb-2 flex-grow-1">
+        My Assignments
+    </a>
+</div>
+
                             </div>
                         </div>
                     </div>
