@@ -84,4 +84,12 @@ Planned improvements for Delete Course logic to match the behavior of Unit Manag
 
 Lecturer Assignment Management: Lecturers can create assignments and upload files for their units. Work is still pending on displaying units in the dropdown, editing and deleting assignments, and ensuring students can view them.
 What has been done so far:
-Lecturers can now create assignments for their units and upload assignment files. These files are visible to enrolled students. The My Assignments table displays created assignments with their title,
+Lecturers can now create assignments for their units, including uploading files as assignment briefs. Created assignments are displayed in the My Assignments table with all relevant information: Title, Unit, Due Date, File, and Created date. Flash messages confirm successful creation.
+
+Current status:
+
++ Lecturers can create assignments and upload files.
+
++ Assignments are visible in the My Assignments table.
+
+Fixed the Foreign Key constraint error in the lecturer assignment system by switching the identifier from lecturer_id to user_id. This ensures that lecturers are correctly linked to units using their primary system identity from the users table, allowing for accurate data storage and display of names in the academic structure.

@@ -58,6 +58,8 @@ $result = mysqli_query($conn, $sql);
 </a>
 
                                     <a href="admin-unit-enroll.php?unit_id=<?php echo $unit['unit_id']; ?>" class="btn btn-sm btn-outline-success">Enroll Students</a>
+
+                                    <a href="admin-assign-lecturer.php?unit_id=<?php echo $unit['unit_id']; ?>" class="btn btn-sm btn-outline-info">Assign Lecturers</a>
                                 </div>
                             </td>
                         </tr>

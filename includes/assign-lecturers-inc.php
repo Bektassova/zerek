@@ -1,70 +1,50 @@
 <?php
 session_start();
+
 require_once 'dbh.php';
 
-// ========================
-// CHECK IF FORM IS SUBMITTED
-// ========================
 if (isset($_POST['assign_lecturers'])) {
-
-    // Get selected unit ID and lecturer IDs
-    $unitId = isset($_POST['unit_id']) ? (int)$_POST['unit_id'] : 0;
-    $lecturerIds = $_POST['lecturer_ids'] ?? [];
-
-    // Basic validation: must select unit and at least one lecturer
-    if ($unitId === 0 || empty($lecturerIds)) {
-        $_SESSION['flash_error'] = "Please select a unit and at least one lecturer.";
-        header("Location: " . $_SERVER['HTTP_REFERER']);
-        exit();
+    // 1. Проверяем, есть ли вообще соединение с базой
+    if (!$conn) {
+        die("Connection failed: " . mysqli_connect_error());
     }
 
-    // ========================
-    // PREPARE SQL: INSERT LECTURER INTO UNIT
-    // ========================
-    // INSERT IGNORE prevents duplicate entries
-    $sql = "INSERT IGNORE INTO lecturer_units (lecturer_id, unit_id) VALUES (?, ?)";
+    $unitId = (int)$_POST['unit_id'];
+    $lecturerIds = $_POST['lecturer_ids'] ?? [];
+
+    // 2. Готовим запрос БЕЗ слова IGNORE, чтобы поймать ошибку
+    $sql = "INSERT INTO lecturer_units (lecturer_id, unit_id) VALUES (?, ?)";
     $stmt = mysqli_prepare($conn, $sql);
 
     if (!$stmt) {
-        $_SESSION['flash_error'] = "Database error: could not prepare statement.";
-        header("Location: " . $_SERVER['HTTP_REFERER']);
-        exit();
+        die("SQL Prepare Error: " . mysqli_error($conn));
     }
 
-    // ========================
-    // LOOP THROUGH SELECTED LECTURERS AND INSERT
-    // ========================
-    $assignedCount = 0; // Counter for successful assignments
+    $assignedCount = 0;
     foreach ($lecturerIds as $lecturerId) {
-        $lecturerId = (int)$lecturerId;
-
-        mysqli_stmt_bind_param($stmt, "ii", $lecturerId, $unitId);
+        $lId = (int)$lecturerId;
+        mysqli_stmt_bind_param($stmt, "ii", $lId, $unitId);
+        
         if (mysqli_stmt_execute($stmt)) {
-            $assignedCount++;
+            $assignedCount += mysqli_stmt_affected_rows($stmt);
+        } else {
+            // 3. Если вставка не удалась — выводим ПОЛНУЮ ошибку базы
+            echo "<h3>Database Error Details:</h3>";
+            echo "Attempted to link Lecturer ID: $lId with Unit ID: $unitId <br>";
+            echo "Error message: " . mysqli_error($conn) . "<br>";
+            echo "Error code: " . mysqli_errno($conn);
+            die(); 
         }
     }
 
-    // Close statement
     mysqli_stmt_close($stmt);
 
-    // ========================
-    // SET FLASH MESSAGE BASED ON RESULT
-    // ========================
     if ($assignedCount > 0) {
-        $_SESSION['flash_success'] = "Successfully assigned $assignedCount lecturer(s) to the unit.";
+        $_SESSION['flash_success'] = "Successfully assigned $assignedCount lecturer(s).";
     } else {
-        $_SESSION['flash_info'] = "No new lecturers were assigned (they may already be assigned).";
+        $_SESSION['flash_info'] = "Nothing was added.";
     }
 
-    // Redirect back to the page where the form was submitted
     header("Location: " . $_SERVER['HTTP_REFERER']);
     exit();
 }
-
-// ========================
-// FALLBACK: IF SOMEONE ACCESSES THIS SCRIPT DIRECTLY
-// ========================
-$_SESSION['flash_error'] = "Invalid request.";
-header("Location: ../admin-units.php");
-exit();
-?>
