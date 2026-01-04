@@ -45,6 +45,16 @@ if (!empty($error_url)) {
     exit();
 }
 
+
+// ========================
+// 3a. CHECK IF USER ALREADY EXISTS
+// ========================
+if (userExists($conn, $username) || userExists($conn, $email)) {
+    // Redirect with clear error message instead of fatal error
+    header("location: ../register.php?error=useralreadyexists");
+    exit();
+}
+
 // ========================
 // 3. REGISTER USER (USERS)
 // ========================
@@ -72,6 +82,8 @@ if ($role === "Lecturer") {
     $stmt = mysqli_prepare($conn, $sql);
     mysqli_stmt_bind_param($stmt, "isss", $userId, $firstName, $lastName, $email);
     mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+
 }
 
 // ========================
