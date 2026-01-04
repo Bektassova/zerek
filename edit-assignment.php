@@ -1,11 +1,16 @@
 <?php
 session_start();
+$test_path = "includes/edit-assignment-inc.php";
+if (file_exists($test_path)) {
+    // Файл найден
+} else {
+    echo "<div style='color:red; background:yellow; padding:10px;'>ВНИМАНИЕ: Система не видит файл по адресу: " . realpath($test_path) . "</div>";
+}
 require_once "includes/dbh.php";
 
 // SECURITY: only Lecturer
 if (!isset($_SESSION["userId"]) || $_SESSION["role"] !== "Lecturer") {
     header("location: login.php");
-    exit();
 }
 
 if (!isset($_GET['id'])) {
@@ -13,31 +18,20 @@ if (!isset($_GET['id'])) {
 }
 
 $assignmentId = (int)$_GET['id'];
-$lecturerUserId = $_SESSION["userId"];
+$lecturerUserId = $_SESSION["userId"]; // Using the Passport ID (25)
 
-// Get lecturer_id
-$sqlLecturer = "SELECT lecturer_id FROM lecturers WHERE user_id = ?";
-$stmt = mysqli_prepare($conn, $sqlLecturer);
-mysqli_stmt_bind_param($stmt, "i", $lecturerUserId);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-$lecturer = mysqli_fetch_assoc($result);
-
-if (!$lecturer) {
-    die("Lecturer record not found.");
-}
-$lecturerId = $lecturer['lecturer_id'];
-
-// Get assignment
+/**
+ * 1. Get assignment details
+ * We check if this assignment belongs to the logged-in lecturer directly
+ */
 $sqlAssignment = "
     SELECT a.*, u.unit_name, u.unit_id
     FROM assignments a
     JOIN units u ON a.unit_id = u.unit_id
-    INNER JOIN lecturer_units lu ON u.unit_id = lu.unit_id
-    WHERE a.assignment_id = ? AND lu.lecturer_id = ?
+    WHERE a.assignment_id = ? AND a.lecturer_id = ?
 ";
 $stmt = mysqli_prepare($conn, $sqlAssignment);
-mysqli_stmt_bind_param($stmt, "ii", $assignmentId, $lecturerId);
+mysqli_stmt_bind_param($stmt, "ii", $assignmentId, $lecturerUserId);
 mysqli_stmt_execute($stmt);
 $assignmentResult = mysqli_stmt_get_result($stmt);
 $assignment = mysqli_fetch_assoc($assignmentResult);
@@ -46,7 +40,9 @@ if (!$assignment) {
     die("Assignment not found or you do not have access.");
 }
 
-// Get all units for this lecturer
+/**
+ * 2. Get all units assigned to this lecturer (for the dropdown)
+ */
 $sqlUnits = "
     SELECT u.unit_id, u.unit_name
     FROM units u
@@ -55,7 +51,7 @@ $sqlUnits = "
     ORDER BY u.unit_name ASC
 ";
 $stmt = mysqli_prepare($conn, $sqlUnits);
-mysqli_stmt_bind_param($stmt, "i", $lecturerId);
+mysqli_stmt_bind_param($stmt, "i", $lecturerUserId);
 mysqli_stmt_execute($stmt);
 $unitsResult = mysqli_stmt_get_result($stmt);
 ?>
@@ -66,7 +62,7 @@ $unitsResult = mysqli_stmt_get_result($stmt);
     <h2 class="mb-4">Edit Assignment</h2>
     <div class="card shadow">
         <div class="card-body">
-            <form action="includes/edit-assignment-inc.php" method="post" enctype="multipart/form-data">
+           <form action="includes/edit-assignment-inc.php" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="assignment_id" value="<?php echo $assignment['assignment_id']; ?>">
 
                 <!-- Unit -->

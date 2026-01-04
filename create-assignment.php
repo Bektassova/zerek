@@ -2,29 +2,20 @@
 session_start();
 require_once "includes/dbh.php";
 
-// SECURITY: only Lecturer
+// SECURITY: only Lecturer can access this page
 if (!isset($_SESSION["userId"]) || $_SESSION["role"] !== "Lecturer") {
     header("location: login.php");
     exit();
 }
 
+// Get the logged-in user's ID (this is the "Passport ID" like 25 for Alice)
 $lecturerUserId = $_SESSION["userId"];
 
-// 1. get lecturer_id by user_id
-$sqlLecturer = "SELECT lecturer_id FROM lecturers WHERE user_id = ?";
-$stmt = mysqli_prepare($conn, $sqlLecturer);
-mysqli_stmt_bind_param($stmt, "i", $lecturerUserId);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-$lecturer = mysqli_fetch_assoc($result);
-
-if (!$lecturer) {
-    die("Lecturer record not found.");
-}
-
-$lecturerId = $lecturer['lecturer_id'];
-
-// 2. fetch units assigned to this lecturer
+/**
+ * 1. Fetch units assigned specifically to this lecturer.
+ * We now use the user_id directly because our 'lecturer_units' table 
+ * uses the main system ID from the 'users' table.
+ */
 $sqlUnits = "
     SELECT u.unit_id, u.unit_name
     FROM units u
@@ -34,10 +25,12 @@ $sqlUnits = "
 ";
 
 $stmt = mysqli_prepare($conn, $sqlUnits);
-mysqli_stmt_bind_param($stmt, "i", $lecturerId);
+mysqli_stmt_bind_param($stmt, "i", $lecturerUserId);
 mysqli_stmt_execute($stmt);
 $unitsResult = mysqli_stmt_get_result($stmt);
 
+// Note: We removed the old step that was looking for the 'lecturer_id' 
+// from the 'lecturers' table to avoid foreign key mismatch.
 ?>
 
 <?php require_once "includes/header.php"; ?>
