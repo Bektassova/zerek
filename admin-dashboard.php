@@ -48,7 +48,10 @@
                     <i class="fas fa-calendar-plus fa-3x text-warning mb-3"></i>
                     <h5>Timetable Builder</h5>
                     <p class="small text-muted">Assign courses to students and set class times.</p>
-                    <a href="admin-timetable.php" class="btn btn-warning btn-sm">Enter</a>
+                  <a href="admin-timetable.php" class="btn btn-warning btn-sm">Enter</a>
+
+                   
+
                 </div>
             </div>
         </div>

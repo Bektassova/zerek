@@ -93,3 +93,21 @@ Current status:
 + Assignments are visible in the My Assignments table.
 
 Fixed the Foreign Key constraint error in the lecturer assignment system by switching the identifier from lecturer_id to user_id. This ensures that lecturers are correctly linked to units using their primary system identity from the users table, allowing for accurate data storage and display of names in the academic structure.
+
+Successfully implemented the CRUD (Create, Read, Update, Delete) functionality for the Assignment Management module. The system now correctly identifies lecturers using their primary user_id to ensure secure data handling. It was resolved to address initial routing issues and folder directory mismatches. The next phase involves developing the student-side interface to allow enrolled students to view and download the assignment briefs uploaded by their lecturers."
+
+Successfully implemented the core functionality for the Lecturer and Student portals. This involved creating a secure bridge between the database and the user interface.
+
+🛠 Issues Solved (The "Battle" Log)
+Database Synchronization: Fixed a critical mismatch where the system was looking for a legacy lecturer_id instead of the global user_id.
+
+The "404 Not Found" Mystery: After many attempts, we discovered that the timetable.php file had a hidden leading character (a space or invisible symbol) in its name. This caused the web server to ignore the file even though it looked correct to the human eye.
+
+Routing & Paths: Standardized all form actions to use relative paths (includes/filename.php), ensuring the app works perfectly on a local MAMP server.
+
+File Management: Created a robust upload system for assignment briefs and fixed the "View File" links.
+Feature,Status,Solution
+Lecturer: Create/Edit/Delete,✅ Working,Implemented full CRUD with user_id validation.
+File Upload System,✅ Working,Files now save correctly to the /uploads directory.
+Student Timetable,✅ Working,Resolved the filename encoding error that caused 404s.
+Profile Dashboard,✅ Working,"Dynamic role-based views for Admin, Lecturer, and Student."
