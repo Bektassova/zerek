@@ -115,3 +115,7 @@ Profile Dashboard,✅ Working,"Dynamic role-based views for Admin, Lecturer, and
 Implemented a full Student Assignment Submission system, allowing students to view only their enrolled unit assignments, download briefs, and submit their work with file uploads.
 During development, routing, file-path, and permission issues caused 404 errors and invisible files.
 These were resolved by correcting database relations, upload directories, and download paths, resulting in a fully working LMS-style submission flow.
+
+Fixed assignment file upload and submission handling.  
+Implemented proper multiple-file upload logic, linked uploaded files to submissions via `submission_files`, and corrected Lecturer view to display submitted files correctly.  
+Updated Student, Lecturer, Profile, and Upload-related components to ensure consistent file storage and retrieval.

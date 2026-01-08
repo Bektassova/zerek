@@ -8,14 +8,14 @@ if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'Student') {
     exit();
 }
 
-$studentId = $_SESSION['userId'];
+$studentId = (int) $_SESSION['userId'];
 
 /*
- We show assignments ONLY for units
- where the student is enrolled
+ Show assignments ONLY for units where the student is enrolled
 */
 $sql = "
     SELECT 
+        a.assignment_id,
         a.title,
         a.description,
         a.due_date,
@@ -42,32 +42,41 @@ $result = mysqli_stmt_get_result($stmt);
             No assignments available yet.
         </div>
     <?php else: ?>
-        <table class="table table-hover">
+        <table class="table table-hover align-middle">
             <thead class="table-dark">
                 <tr>
                     <th>Unit</th>
                     <th>Title</th>
                     <th>Due Date</th>
                     <th>File</th>
+                    <th>Action</th>
                 </tr>
             </thead>
+
             <tbody>
                 <?php while ($row = mysqli_fetch_assoc($result)): ?>
                     <tr>
-                        <td><?= htmlspecialchars($row['unit_name']) ?></td>
-                        <td><?= htmlspecialchars($row['title']) ?></td>
-                        <td><?= htmlspecialchars($row['due_date']) ?></td>
-                        <td>
-                            <?php if ($row['file_path']): ?>
-                               <a href="uploads/<?php echo htmlspecialchars($row['file_path']); ?>" 
-   target="_blank"
-   class="btn btn-sm btn-outline-primary">
-   Download
-</a>
+                        <td><?php echo htmlspecialchars($row['unit_name']); ?></td>
+                        <td><?php echo htmlspecialchars($row['title']); ?></td>
+                        <td><?php echo htmlspecialchars($row['due_date']); ?></td>
 
+                        <td>
+                            <?php if (!empty($row['file_path'])): ?>
+                                <a href="uploads/<?php echo rawurlencode($row['file_path']); ?>"
+                                   target="_blank"
+                                   class="btn btn-sm btn-outline-primary">
+                                    Download
+                                </a>
                             <?php else: ?>
                                 —
                             <?php endif; ?>
+                        </td>
+
+                        <td class="text-nowrap">
+                            <a href="student-submit-assignment.php?assignment_id=<?php echo (int)$row['assignment_id']; ?>"
+                               class="btn btn-sm btn-success">
+                                Submit
+                            </a>
                         </td>
                     </tr>
                 <?php endwhile; ?>

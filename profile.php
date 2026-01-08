@@ -139,6 +139,9 @@
     <a href="lecturer-assignments.php" class="btn btn-secondary mb-2 flex-grow-1">
         My Assignments
     </a>
+     <a href="lecturer-submissions.php" class="btn btn-primary mb-2 flex-grow-1">
+        View Submissions
+    </a>
 </div>
 
                             </div>
