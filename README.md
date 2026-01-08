@@ -111,3 +111,7 @@ Lecturer: Create/Edit/Delete,✅ Working,Implemented full CRUD with user_id vali
 File Upload System,✅ Working,Files now save correctly to the /uploads directory.
 Student Timetable,✅ Working,Resolved the filename encoding error that caused 404s.
 Profile Dashboard,✅ Working,"Dynamic role-based views for Admin, Lecturer, and Student."
+
+Implemented a full Student Assignment Submission system, allowing students to view only their enrolled unit assignments, download briefs, and submit their work with file uploads.
+During development, routing, file-path, and permission issues caused 404 errors and invisible files.
+These were resolved by correcting database relations, upload directories, and download paths, resulting in a fully working LMS-style submission flow.

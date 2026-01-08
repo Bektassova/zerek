@@ -99,6 +99,21 @@
                             </div>
                         </div>
                     </div>
+                     <div class="col-md-6 mb-4">
+    <div class="card border-start border-warning border-4 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title text-warning">My Assignments</h5>
+            <p class="card-text text-muted">
+                View assignments for your enrolled units and download files.
+            </p>
+            <a href="student-assignments.php"
+               class="btn btn-sm btn-outline-warning">
+                View Assignments
+            </a>
+        </div>
+    </div>
+</div>
+
                 </div>
 
             <?php elseif ($user['role'] == "Lecturer"): ?>
