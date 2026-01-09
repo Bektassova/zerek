@@ -82,7 +82,7 @@
             <?php if ($user['role'] == "Student"): ?>
                 <div class="row">
                     <div class="col-md-6 mb-4">
-                        <div class="card border-start border-primary border-4 shadow-sm">
+                        <div class="card border-start border-success  border-4 shadow-sm">
                             <div class="card-body">
                                 <h5 class="card-title text-primary">My Timetable</h5>
                                 <p class="card-text text-muted">Check your upcoming lectures and classroom locations.</p>
@@ -90,19 +90,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 mb-4">
-                        <div class="card border-start border-success border-4 shadow-sm">
-                            <div class="card-body">
-                                <h5 class="card-title text-success">Latest Grades</h5>
-                                <p class="card-text text-muted">Your semester results have been updated.</p>
-                                <a href="grades.php" class="btn btn-sm btn-outline-success">View Academic Report</a>
-                            </div>
-                        </div>
-                    </div>
+                  
                      <div class="col-md-6 mb-4">
     <div class="card border-start border-warning border-4 shadow-sm">
         <div class="card-body">
-            <h5 class="card-title text-warning">My Assignments</h5>
+            <h5 class="card-title text-success">My Assignments</h5>
             <p class="card-text text-muted">
                 View assignments for your enrolled units and download files.
             </p>
@@ -114,6 +106,15 @@
     </div>
 </div>
 
+  <div class="col-md-6 mb-4">
+                        <div class="card border-start border-primary border-4 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title text-warning">Latest Grades</h5>
+                                <p class="card-text text-muted">Your semester results have been updated.</p>
+                                <a href="grades.php" class="btn btn-sm btn-outline-success">View Academic Report</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             <?php elseif ($user['role'] == "Lecturer"): ?>
@@ -126,7 +127,7 @@
     Welcome back, Professor. You can manage your students or upload new course materials below.
 </p>
 
-<div class="mt-3 d-flex flex-wrap">
+<div class="mt-4 d-flex flex-wrap gap-3">
     <a href="manage-students.php" class="btn btn-info me-2 mb-2 flex-grow-1">
         Manage Students
     </a>

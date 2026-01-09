@@ -119,3 +119,7 @@ These were resolved by correcting database relations, upload directories, and do
 Fixed assignment file upload and submission handling.  
 Implemented proper multiple-file upload logic, linked uploaded files to submissions via `submission_files`, and corrected Lecturer view to display submitted files correctly.  
 Updated Student, Lecturer, Profile, and Upload-related components to ensure consistent file storage and retrieval.
+Implemented full grading workflow: lecturers can now assign, update, and delete marks with mandatory feedback.
+Connected grading to student dashboards, displaying submission status, grades, and feedback in My Assignments.
+Performed database sanitation by removing invalid submissions without files and stabilizing Lecturer Submission View.
+Improved dashboard UI spacing and controls for professional LMS usability.
