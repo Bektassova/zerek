@@ -14,6 +14,23 @@
 
     // 4. Fetch the specific user's data using the ID stored in the session
     $userId = $_SESSION["userId"];
+    /*
+|--------------------------------------------------------------------------
+| My Units (Student enrolments)
+|--------------------------------------------------------------------------
+| Shows units where the student is enrolled (student_units table)
+*/
+$sqlMyUnits = "
+    SELECT u.unit_id, u.unit_name
+    FROM student_units su
+    JOIN units u ON u.unit_id = su.unit_id
+    WHERE su.student_id = ?
+    ORDER BY u.unit_name ASC
+";
+$stmtMyUnits = mysqli_prepare($conn, $sqlMyUnits);
+mysqli_stmt_bind_param($stmtMyUnits, "i", $userId);
+mysqli_stmt_execute($stmtMyUnits);
+$resultMyUnits = mysqli_stmt_get_result($stmtMyUnits);
     $user = getUser($conn, $userId); 
 
     // 5. Emergency check if user is missing from DB
@@ -109,7 +126,30 @@
             </div>
         </div>
 
-       
+       <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Student'): ?>
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">My Units</h5>
+        </div>
+        <div class="card-body">
+            <?php if (mysqli_num_rows($resultMyUnits) === 0): ?>
+                <div class="text-muted">
+                    You are not enrolled in any units yet. Please contact the administrator.
+                </div>
+            <?php else: ?>
+                <ul class="mb-0">
+                    <?php while ($u = mysqli_fetch_assoc($resultMyUnits)): ?>
+                        <li><?php echo htmlspecialchars($u['unit_name']); ?></li>
+                    <?php endwhile; ?>
+                </ul>
+                <div class="small text-muted mt-2">
+                    These units are assigned by the administrator (Enroll Students to Units).
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php endif; ?>
+
 
     <div class="row mt-5">
         <div class="col-12">

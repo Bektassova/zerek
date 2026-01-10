@@ -123,3 +123,11 @@ Implemented full grading workflow: lecturers can now assign, update, and delete 
 Connected grading to student dashboards, displaying submission status, grades, and feedback in My Assignments.
 Performed database sanitation by removing invalid submissions without files and stabilizing Lecturer Submission View.
 Improved dashboard UI spacing and controls for professional LMS usability.
+ Profile Customization
+* **Profile Pictures:** Implemented a file upload system for profile pictures, allowing both Students and Lecturers to personalize their accounts.
+* **Bug Fixes:** Resolved issues with image pathing and directory permissions to ensure avatars display correctly on the dashboard.
+ Technical Troubleshooting (The "Hard Parts")
+
+* **Filename Audit:** Identified and fixed a hidden character encoding error in `timetable.php` that was causing persistent 404 errors.
+* **Variable Logic:** Fixed a critical bug in the assignment display table where a variable mismatch (`$row` vs `$assignment`) prevented file links from showing up.
+Implemented a “My Units” section on the student profile so students can clearly see their assigned/enrolled units and understand what their coursework/assignments are linked to.
