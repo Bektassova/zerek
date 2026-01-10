@@ -85,11 +85,8 @@ $result = mysqli_stmt_get_result($stmt);
 
                         <td>
                             <?php if (!empty($row['file_path'])): ?>
-                                <a href="uploads/<?php echo rawurlencode($row['file_path']); ?>"
-                                   target="_blank"
-                                   class="btn btn-sm btn-outline-primary">
-                                    Download
-                                </a>
+                             <a href="<?php echo htmlspecialchars($row['file_path']); ?>" target="_blank">Download</a>
+
                             <?php else: ?>
                                 —
                             <?php endif; ?>

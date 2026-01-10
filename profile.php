@@ -26,38 +26,81 @@
 
 <div class="container mt-5">
     <div class="row align-items-center">
-        <div class="col-md-7">
-            <div class="card shadow-sm border-0 bg-light">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0"><i class="fas fa-user-circle"></i> Personal Information</h4>
-                </div>
-                <div class="card-body">
-                    <div class="row mb-2">
-                        <div class="col-sm-4 fw-bold">Username:</div>
-                        <div class="col-sm-8 text-muted"><?php echo htmlspecialchars($user['username']); ?></div>
+        <!-- LEFT: Personal Information card with avatar -->
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 bg-light">
+
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-user-circle"></i> Personal Information
+                </h4>
+            </div>
+
+            <!-- Avatar INSIDE card -->
+            <?php
+                $photo = !empty($user['profile_photo'])
+                    ? $user['profile_photo']
+                    : 'assets/default-avatar.png';
+            ?>
+
+            <div class="card-body">
+                <div class="row">
+
+                    <!-- Info -->
+                    <div class="col-md-8">
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold">Username:</div>
+                            <div class="col-sm-8 text-muted"><?php echo htmlspecialchars($user['username']); ?></div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold">Full Name:</div>
+                            <div class="col-sm-8 text-muted"><?php echo htmlspecialchars($user['name']." ".$user['surname']); ?></div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold">Email:</div>
+                            <div class="col-sm-8 text-muted"><?php echo htmlspecialchars($user['email']); ?></div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold">Date of Birth:</div>
+                            <div class="col-sm-8"><span class="badge bg-info text-dark"><?php echo htmlspecialchars($user['date_of_birth']); ?></span></div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold">User ID:</div>
+                            <div class="col-sm-8"><span class="badge bg-info text-dark"><?php echo htmlspecialchars($user['user_id']); ?></span></div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold">Role:</div>
+                            <div class="col-sm-8"><span class="badge bg-info text-dark"><?php echo htmlspecialchars($user['role']); ?></span></div>
+                        </div>
                     </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-4 fw-bold">Full Name:</div>
-                        <div class="col-sm-8 text-muted"><?php echo htmlspecialchars($user['name'] . " " . $user['surname']); ?></div>
+
+                    <!-- Avatar -->
+                    <div class="col-md-4 text-center">
+                        <img src="<?php echo htmlspecialchars($photo); ?>"
+                             class="rounded-circle mb-3"
+                             width="130" height="130"
+                             style="object-fit:cover;border:4px solid #0d6efd;">
+                        <form action="includes/upload-profile-photo.php" method="POST" enctype="multipart/form-data">
+                            <input type="file" name="photo" class="form-control form-control-sm mb-2" accept="image/*" required>
+                            <button class="btn btn-primary btn-sm w-100">Upload Photo</button>
+                        </form>
                     </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-4 fw-bold">Email:</div>
-                        <div class="col-sm-8 text-muted"><?php echo htmlspecialchars($user['email']); ?></div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-4 fw-bold">Date of Birth:</div>
-                        <div class="col-sm-8"><span class="badge bg-info text-dark"><?php echo htmlspecialchars($user['date_of_birth']); ?></span></div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-4 fw-bold">User ID:</div>
-                        <div class="col-sm-8"><span class="badge bg-info text-dark"><?php echo htmlspecialchars($user['user_id']); ?></span></div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-4 fw-bold">Role:</div>
-                        <div class="col-sm-8"><span class="badge bg-info text-dark"><?php echo htmlspecialchars($user['role']); ?></span></div>
-                    </div>
+
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="col-md-1 d-none d-md-block text-center"> </div>
+
+    <!-- RIGHT: Continuing Education image -->
+<div class="col-md-5 d-none d-md-block text-center">
+    <img src="https://cache.careers360.mobi/media/article_images/2023/2/3/importance-of-education.jpg" 
+         alt="Education" 
+         class="img-fluid rounded-3 shadow" 
+         style="max-height: 300px; width: 100%; object-fit: cover;">
+</div>
+
+
             
             <div class="mt-4 mb-4">
                 <a href="edit-profile.php" class="btn btn-primary px-4 shadow-sm">
@@ -66,13 +109,7 @@
             </div>
         </div>
 
-        <div class="col-md-5 d-none d-md-block text-center">
-            <img src="https://cache.careers360.mobi/media/article_images/2023/2/3/importance-of-education.jpg" 
-                 alt="Education" 
-                 class="img-fluid rounded-3 shadow" 
-                 style="max-height: 300px; width: 100%; object-fit: cover;">
-        </div>
-    </div> 
+       
 
     <div class="row mt-5">
         <div class="col-12">
