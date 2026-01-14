@@ -3,6 +3,13 @@
     This page will be included in every other page to have
     the same header/nav everywhere.
 -->
+    <?php
+// Global base path for file links (prevents 404 issues)
+if (!isset($BASE_PATH)) {
+    $BASE_PATH = "/zerek/";   // local MAMP project folder
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

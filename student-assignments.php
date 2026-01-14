@@ -85,7 +85,12 @@ $result = mysqli_stmt_get_result($stmt);
 
                         <td>
                             <?php if (!empty($row['file_path'])): ?>
-                             <a href="<?php echo htmlspecialchars($row['file_path']); ?>" target="_blank">Download</a>
+                             <a class="btn btn-sm btn-outline-primary"
+   href="<?php echo $BASE_PATH . htmlspecialchars($row['file_path']); ?>"
+   target="_blank">
+   Download
+</a>
+
 
                             <?php else: ?>
                                 —

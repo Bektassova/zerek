@@ -144,9 +144,11 @@ function buildFileUrl($path) {
                                         <?php foreach ($paths as $p): ?>
                                             <?php $fileUrl = buildFileUrl($p); ?>
                                             <div class="mb-1">
-                                                <a class="btn btn-sm btn-outline-primary"
-                                                   href="<?php echo htmlspecialchars($fileUrl); ?>"
-                                                   target="_blank">Download</a>
+                                               <a class="btn btn-sm btn-outline-primary"
+   href="<?php echo $BASE_PATH . htmlspecialchars($fileUrl); ?>"
+   target="_blank">Download</a>
+
+
                                                 <span class="small text-muted ms-2"><?php echo htmlspecialchars(basename($p)); ?></span>
                                             </div>
                                         <?php endforeach; ?>
@@ -156,44 +158,43 @@ function buildFileUrl($path) {
                                 </td>
 
                                 <!-- One grading form (mark + feedback together) -->
-                                <td colspan="2">
-                                    <form method="post" action="includes/grade-submission-inc.php" class="d-flex flex-column gap-2">
-                                        <input type="hidden" name="submission_id" value="<?php echo (int)$row['submission_id']; ?>">
+                              <td style="min-width:320px;">
+<form method="post" action="includes/grade-submission-inc.php">
 
-                                        <div class="d-flex gap-2 align-items-center">
-                                            <input type="number" name="mark"
-                                                   class="form-control form-control-sm"
-                                                   min="0" max="100" step="1"
-                                                   value="<?php echo htmlspecialchars($row['mark'] ?? ''); ?>"
-                                                   required>
+    <input type="hidden" name="submission_id" value="<?php echo (int)$row['submission_id']; ?>">
 
-                                            <button class="btn btn-sm btn-success" type="submit" name="save_grade">
-                                                Save
-                                            </button>
+    <div class="d-flex gap-2 mb-2">
+        <input type="number"
+               name="mark"
+               min="0" max="100"
+               class="form-control form-control-sm"
+               style="max-width:80px"
+               value="<?php echo (int)($row['mark'] ?? ''); ?>"
+               placeholder="0-100">
 
-                                              <?php if (!is_null($row['mark']) || !empty($row['feedback'])): ?>
-        <button class="btn btn-sm btn-danger" type="submit" name="delete_grade"
-                onclick="return confirm('Delete this grade?');">
-            Delete
-        </button>
-    <?php endif; ?>
-                                        </div>
+        <textarea name="feedback"
+                  class="form-control form-control-sm"
+                  rows="2"
+                  placeholder="Feedback..."><?php echo htmlspecialchars($row['feedback'] ?? ''); ?></textarea>
+    </div>
 
-                                        <textarea name="feedback" class="form-control form-control-sm" rows="2" required><?php
-                                            echo htmlspecialchars($row['feedback'] ?? '');
-                                        ?></textarea>
+    <div class="d-flex gap-2">
+        <button type="submit" name="save_grade" class="btn btn-sm btn-success">Save</button>
 
-                                        <?php if (!is_null($row['graded_at'])): ?>
-                                            <div class="small text-muted">
-                                                Graded: <?php echo htmlspecialchars($row['graded_at']); ?>
-                                            </div>
-                                        <?php else: ?>
-                                            <div class="small text-muted">
-                                                Not graded yet
-                                            </div>
-                                        <?php endif; ?>
-                                    </form>
-                                </td>
+        <form method="post" action="includes/delete-submission-inc.php"
+              onsubmit="return confirm('Delete this submission permanently?');">
+            <input type="hidden" name="submission_id" value="<?php echo (int)$row['submission_id']; ?>">
+            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+        </form>
+    </div>
+
+    <div class="small text-muted mt-1">
+        <?php echo !empty($row['graded_at']) ? "Graded: ".$row['graded_at'] : "Not graded yet"; ?>
+    </div>
+
+</form>
+</td>
+
                             </tr>
                         <?php endwhile; ?>
                     <?php endif; ?>

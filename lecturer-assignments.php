@@ -117,7 +117,7 @@ $result = mysqli_stmt_get_result($stmt);
          <td>
   <?php if (!empty($assignment['file_path'])): ?>
       <a class="btn btn-sm btn-outline-primary"
-         href="<?php echo htmlspecialchars($assignment['file_path']); ?>"
+         href="<?php echo $BASE_PATH . htmlspecialchars($assignment['file_path']); ?>"
          target="_blank">
           View File
       </a>
