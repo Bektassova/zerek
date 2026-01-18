@@ -137,4 +137,4 @@ students with the same course_id automatically share the same schedule.
 Student timetable view was updated to show start and end times correctly.
 - Fixed deletion logic in **Active Academic Structure**: the Delete button now correctly removes a **unit** instead of a course.  
 - A course can be deleted only after all related units have been removed.
-s
+Issues were identified with course–timetable relationships and deletion behavior in the admin panel. The system now correctly prevents course deletion when dependent units exist, ensuring data integrity. Orphaned timetable entries created after course removal can be reassigned to a new course, allowing existing schedules to be preserved rather than lost. As a result, timetable visibility for students is restored once course associations are aligned, making the academic structure more consistent and reliable.
