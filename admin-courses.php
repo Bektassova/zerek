@@ -420,15 +420,12 @@ Edit
 
 
 
-<a href="includes/delete-course-inc.php?id=<?php echo $course['course_id']; ?>&return=admin-courses.php"
-
-class="btn btn-sm btn-outline-danger"
-
-onclick="return confirm('Delete this course?')">
-
-Delete
-
+<a href="includes/delete-unit-inc.php?id=<?php echo $row['unit_id']; ?>&return=admin-courses.php"
+   class="btn btn-sm btn-outline-danger"
+   onclick="return confirm('Delete this unit?')">
+  Delete
 </a>
+
 
 
 

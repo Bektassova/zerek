@@ -131,3 +131,10 @@ Improved dashboard UI spacing and controls for professional LMS usability.
 * **Filename Audit:** Identified and fixed a hidden character encoding error in `timetable.php` that was causing persistent 404 errors.
 * **Variable Logic:** Fixed a critical bug in the assignment display table where a variable mismatch (`$row` vs `$assignment`) prevented file links from showing up.
 Implemented a “My Units” section on the student profile so students can clearly see their assigned/enrolled units and understand what their coursework/assignments are linked to.
+Refactored the timetable system from individual student schedules to a 
+course-based model. Admin now creates timetable entries per course, and all 
+students with the same course_id automatically share the same schedule. 
+Student timetable view was updated to show start and end times correctly.
+- Fixed deletion logic in **Active Academic Structure**: the Delete button now correctly removes a **unit** instead of a course.  
+- A course can be deleted only after all related units have been removed.
+s
