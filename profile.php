@@ -163,7 +163,8 @@ $resultMyUnits = mysqli_stmt_get_result($stmtMyUnits);
                             <div class="card-body">
                                 <h5 class="card-title text-primary">My Timetable</h5>
                                 <p class="card-text text-muted">Check your upcoming lectures and classroom locations.</p>
-                              <a href="timetable.php" class="btn btn-sm btn-outline-primary">View Schedule</a>
+<a href="timetable.php" class="btn btn-sm btn-outline-primary">View Schedule</a>
+
                             </div>
                         </div>
                     </div>
