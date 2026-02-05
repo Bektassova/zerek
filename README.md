@@ -138,3 +138,41 @@ Student timetable view was updated to show start and end times correctly.
 - Fixed deletion logic in **Active Academic Structure**: the Delete button now correctly removes a **unit** instead of a course.  
 - A course can be deleted only after all related units have been removed.
 Issues were identified with course–timetable relationships and deletion behavior in the admin panel. The system now correctly prevents course deletion when dependent units exist, ensuring data integrity. Orphaned timetable entries created after course removal can be reassigned to a new course, allowing existing schedules to be preserved rather than lost. As a result, timetable visibility for students is restored once course associations are aligned, making the academic structure more consistent and reliable.
+
+HTML Validation
+
+Key pages of the system were validated to ensure correct HTML structure and compliance with web standards.
+Validation was performed by opening each page in the browser, selecting View Page Source, copying the rendered HTML, and checking it using the W3C HTML Validator.
+
+The following pages were validated:
+
+login.php
+
+register.php
+
+profile.php
+
+student-assignments.php
+
+lecturer-submissions.php
+
+timetable.php
+
+create-assignment.php
+
+Bootstrap was used for layout and responsiveness.
+Any warnings caused by development-only meta cache directives were removed or replaced with proper server headers where necessary.
+
+Footer Layout Fix
+
+An issue occurred where the footer appeared in the middle of the page when the page content was short, and overlapped elements in some dashboards.
+
+This was resolved by implementing a flexbox layout:
+
+The <body> element was set to a vertical flex container with full viewport height.
+
+A <main> wrapper was introduced to allow the page content to expand.
+
+The footer was given mt-auto so it automatically stays at the bottom of the page.
+
+This ensured consistent footer positioning across all pages, regardless of content length.

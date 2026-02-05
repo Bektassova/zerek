@@ -94,6 +94,7 @@ $resultMyUnits = mysqli_stmt_get_result($stmtMyUnits);
                     <!-- Avatar -->
                     <div class="col-md-4 text-center">
                         <img src="<?php echo htmlspecialchars($photo); ?>"
+                         alt="Profile photo"
                              class="rounded-circle mb-3"
                              width="130" height="130"
                              style="object-fit:cover;border:4px solid #0d6efd;">
@@ -161,7 +162,7 @@ $resultMyUnits = mysqli_stmt_get_result($stmtMyUnits);
                     <div class="col-md-6 mb-4">
                         <div class="card border-start border-success  border-4 shadow-sm">
                             <div class="card-body">
-                                <h5 class="card-title text-primary">My Timetable</h5>
+                                <h4 class="card-title text-primary">My Timetable</h4>
                                 <p class="card-text text-muted">Check your upcoming lectures and classroom locations.</p>
 <a href="timetable.php" class="btn btn-sm btn-outline-primary">View Schedule</a>
 
@@ -172,7 +173,7 @@ $resultMyUnits = mysqli_stmt_get_result($stmtMyUnits);
                      <div class="col-md-6 mb-4">
     <div class="card border-start border-warning border-4 shadow-sm">
         <div class="card-body">
-            <h5 class="card-title text-success">My Assignments</h5>
+            <h4 class="card-title text-success">My Assignments</h4>
             <p class="card-text text-muted">
                 View assignments for your enrolled units and download files.
             </p>
@@ -187,7 +188,7 @@ $resultMyUnits = mysqli_stmt_get_result($stmtMyUnits);
   <div class="col-md-6 mb-4">
                         <div class="card border-start border-primary border-4 shadow-sm">
                             <div class="card-body">
-                                <h5 class="card-title text-warning">Latest Grades</h5>
+                                <h4 class="card-title text-warning">Latest Grades</h4>
                                 <p class="card-text text-muted">Your semester results have been updated.</p>
                                 <a href="grades.php" class="btn btn-sm btn-outline-success">View Academic Report</a>
                             </div>
