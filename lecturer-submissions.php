@@ -1,15 +1,15 @@
 <?php
-include "includes/header.php";
+include "includes/header.php"; // Убедись, что в header.php уже есть session_start()
 require_once "includes/dbh.php";
 
-// Security: only Lecturer
-if (!isset($_SESSION["userId"]) || $_SESSION["role"] !== "Lecturer") {
-    header("Location: login.php");
+// Если в header.php нет session_start(), добавь его сюда первой строкой
+
+if (!isset($_SESSION["userId"]) || ($_SESSION["role"] !== "Lecturer" && $_SESSION["role"] !== "Teacher")) {
+    header("location: login.php");
     exit();
 }
 
 $lecturerId = (int) $_SESSION["userId"];
-
 /*
 Shows submissions for assignments that belong to units assigned to this lecturer.
 Tables used:

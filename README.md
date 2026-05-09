@@ -176,3 +176,55 @@ A <main> wrapper was introduced to allow the page content to expand.
 The footer was given mt-auto so it automatically stays at the bottom of the page.
 
 This ensured consistent footer positioning across all pages, regardless of content length.
+
+Update (9 May 2026)
+Interface Evolution: From Stacked Layout to 3-Column Dashboard
+We have completely overhauled the page structure, moving away from a vertical "stacked" layout (where sections sat on top of each other) to a highly efficient three-column dashboard. This maximizes screen real estate and eliminates unnecessary scrolling.
+
+1. Dashboard Architecture (Main Workspace)
+Left Column (Navigation & Units):
+
+Quick access to Dashboard, My Units (e.g., Software Project), and My Timetable.
+
+One-click navigation to assignments and performance analytics.
+
+Center Column (Interactive Workspace):
+
+Performance Level Indicator: A visual achievement scale using dynamic color-coded bands.
+
+Real-time notifications regarding module completion requirements.
+
+Right Column (Widgets & Planning):
+
+Academic Calendar: An interactive view for May 2026.
+
+Events Log: Highlights critical deadlines, such as "Assignment Due (May 22)" and "End of Term (June 1)".
+
+2. Profile Page Optimization (2-Column Layout)
+Balanced Design: The Profile page now utilizes a symmetrical two-column grid.
+
+Components: Personal Information (Photo/Details) and the Control Panel (for Lecturers) or Progress Tracker (for Students) now sit side-by-side. This creates a professional, "at-a-glance" user experience.
+
+3. Intelligent Cumulative Progress Logic
+Real-Time Summation: Implemented an algorithm that calculates the total score dynamically. The student sees their "success chain" (e.g., 18 + 23 = 41).
+
+Automated Grade Bands: Configured a threshold trigger at 41 points. The system automatically upgrades the status from neutral (⚪) to 🔴 Minimum Pass, displaying the motivational prompt: "You have 41/50 so far. Keep going!"
+
+Thresholds:
+
+🔴 Minimum Pass: 50–61% (Triggered early at 41 for progress tracking).
+
+🟡 Satisfactory: 62–79%.
+
+🟢 Merit: 80–89%.
+
+🔵 Distinction: 90%+.
+
+4. Technical & UX Enhancements (Bug Fixes)
+Navigation Sync: Resolved the 404 Not Found error during assignment uploads by synchronizing the Action button paths with the student-submit-assignment.php file.
+
+Column Reordering: Optimized the Assignments table by moving the Action column (Submit/Done) before the Grade column to improve user workflow.
+
+Role-Based Adaptive Padding: Integrated a PHP check to manage layout spacing. Lecturers receive an increased top margin (mt-5 pt-5) to prevent UI overlap with the fixed header, while Students maintain a standard compact view.
+
+Feedback System: Fixed the JavaScript logic for Feedback Bubbles. Teacher comments now toggle correctly within the table without disrupting the grid alignment.

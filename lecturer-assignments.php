@@ -2,16 +2,9 @@
 session_start();
 require_once "includes/dbh.php";
 
-/*
-====================================================
-SECURITY CHECK
-----------------------------------------------------
-Only logged-in users with role = Lecturer
-are allowed to access this page.
-====================================================
-*/
-if (!isset($_SESSION["userId"]) || $_SESSION["role"] !== "Lecturer") {
-    header("location: login.php");
+// Универсальная проверка безопасности
+if (!isset($_SESSION["userId"]) || ($_SESSION["role"] !== "Lecturer" && $_SESSION["role"] !== "Teacher")) {
+    header("location: login.php?error=notauthorized");
     exit();
 }
 
@@ -66,7 +59,7 @@ $result = mysqli_stmt_get_result($stmt);
             + Create Assignment
         </a>
     </div>
-
+    <a href="profile.php" class="btn btn-secondary mt-3">Back to Profile</a>
     <!-- ASSIGNMENTS TABLE -->
     <div class="card shadow">
         <div class="card-body">
@@ -168,7 +161,7 @@ $result = mysqli_stmt_get_result($stmt);
 
                 </tbody>
             </table>
-
+    <a href="profile.php" class="btn btn-secondary mt-3">Back to Profile</a>
         </div>
     </div>
 </div>
