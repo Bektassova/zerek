@@ -1,3 +1,25 @@
+<style>
+    /* Стиль для строки прогресса */
+    .progress-highlight-row {
+        background-color: #af2a2a !important; /* Тот самый "чуть-чуть серее" */
+        transition: background-color 0.3s ease; /* Плавный переход */
+        cursor: default;
+    }
+
+    /* Эффект при наведении */
+    .progress-highlight-row:hover {
+        background-color: #bca3a3 !important; /* Более темный серый при наведении */
+    }
+
+    /* Дополнительно: выделим текст внутри, чтобы он смотрелся четче */
+    .progress-text {
+        color: #333;
+        font-size: 0.95rem;
+        letter-spacing: 0.3px;
+    }
+</style>
+
+
 <?php
 include "includes/header.php";
 require_once "includes/dbh.php";
@@ -116,19 +138,18 @@ function getPerf($score) {
     ?>
         
         <!-- СТРОКА ХРОНОЛОГИИ -->
-        <?php if ($showPerf): ?>
-        <tr class="table-light">
-            <td colspan="7" class="text-start ps-4 py-2 border-top">
-                <span class="fw-bold">
-                    <?php 
-                        echo implode(" + ", $history) . " = " . $totalAccumulated; 
-                    ?> 
-                    → "You have <?php echo $totalAccumulated; ?>/50 so far" 
-                    → <?php echo $pIcon . " " . $pText; ?>. Keep going!
-                </span>
-            </td>
-        </tr>
-        <?php endif; ?>
+       <?php if ($showPerf): ?>
+<tr class="progress-highlight-row"> <td colspan="7" class="text-start ps-4 py-2 border-top">
+        <span class="fw-bold progress-text">
+            <?php 
+                echo implode(" + ", $history) . " = " . $totalAccumulated; 
+            ?> 
+            → "You have <?php echo $totalAccumulated; ?>/50 so far" 
+            → <?php echo $pIcon . " " . $pText; ?>. Keep going!
+        </span>
+    </td>
+</tr>
+<?php endif; ?>
 
         <tr>
             <td><?php echo htmlspecialchars($row['unit_name']); ?></td>
