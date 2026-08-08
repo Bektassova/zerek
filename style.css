@@ -1,0 +1,40 @@
+.day-column{
+    display:flex;
+    flex-direction:column;
+}
+
+.lesson-card{
+    height:190px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    padding:15px;
+}
+
+.subject-title{
+    height:55px;
+    overflow:hidden;
+    font-weight:bold;
+}
+.lesson-card h6{
+    min-height:52px;
+    font-weight:700;
+}
+
+.lesson-card .badge{
+    width:fit-content;
+}
+
+.day-column .card{
+    flex:1;
+}
+
+.card-body{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.btn-success{
+    width:100%;
+}

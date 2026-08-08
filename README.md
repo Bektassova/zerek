@@ -228,3 +228,52 @@ Column Reordering: Optimized the Assignments table by moving the Action column (
 Role-Based Adaptive Padding: Integrated a PHP check to manage layout spacing. Lecturers receive an increased top margin (mt-5 pt-5) to prevent UI overlap with the fixed header, while Students maintain a standard compact view.
 
 Feedback System: Fixed the JavaScript logic for Feedback Bubbles. Teacher comments now toggle correctly within the table without disrupting the grid alignment.
+July–August 2026 — Kazakhstan
+Timetable UI Refactoring
+Refactored the student timetable interface from the previous table-based presentation to a card-based layout.
+Improved the visual grouping of individual lessons and timetable information.
+Updated lesson time display to clearly show start and end times.
+Improved responsive layout and readability of timetable entries.
+Lecturer Weekly Teaching Plan
+
+Implemented a lecturer-side Weekly Teaching Plan module connected to academic units.
+
+Lecturer functionality:
+
+Create weekly teaching-plan entries.
+Edit existing weekly entries.
+Define week number, topic, description, learning objectives and homework.
+Upload teaching materials:
+Lecture Notes
+PowerPoint
+Tutorial
+Reading Material
+Quiz
+Store weekly teaching-plan data in thematic_plans and thematic_items.
+Added is_published status control.
+Implemented Publish / Unpublish toggle functionality.
+Student Units & Weekly Plan
+
+Implemented the student-side interface for accessing enrolled units and their published teaching content.
+
+Student functionality:
+
+View enrolled academic units.
+Open an individual unit through View Unit.
+View published weekly teaching-plan entries.
+Access published teaching materials directly from the unit page.
+View topic descriptions, learning objectives and homework.
+Lecturer–Student Content Integration
+
+Connected the lecturer teaching-plan workflow with the student learning interface:
+
+Lecturer → Weekly Plan → Database → Published Content → Enrolled Student
+
+Only weekly-plan items with is_published = 1 are returned to the student interface, while draft/unpublished items remain unavailable to students.
+
+Technical Changes
+Added database-driven publication control through thematic_items.is_published.
+Added file upload handling for weekly teaching materials.
+Updated routing between lecturer and student weekly-plan pages.
+Added enrolled-unit validation before displaying student learning content.
+Resolved file-path, database and routing issues during integration.

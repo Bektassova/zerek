@@ -8,7 +8,7 @@
 </main>
 <footer class="bg-warning d-flex justify-content-center mt-auto" style="min-height:50px;">
   <p class="m-0 d-flex align-items-center py-2">
-    &copy; <?php echo date('Y'); ?> SchoolManagement
+    &copy; <?php echo date('Y'); ?>  Zerek | School Management System
   </p>
 </footer>
 

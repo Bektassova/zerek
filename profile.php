@@ -81,15 +81,19 @@ $topMarginClass = ($_SESSION['role'] === 'Lecturer') ? 'mt-5 pt-5' : 'mt-4';
                     <div class="card border-start border-dark border-4 shadow-sm">
                         <div class="card-body p-3">
                             <h6 class="fw-bold mb-1">My Units</h6>
-                            <ul class="ps-3 mb-0 small text-muted">
-                                <?php if (mysqli_num_rows($resultMyUnits) > 0): ?>
-                                    <?php while ($u = mysqli_fetch_assoc($resultMyUnits)): ?>
-                                        <li><?php echo htmlspecialchars($u['unit_name']); ?></li>
-                                    <?php endwhile; ?>
-                                <?php else: ?>
-                                    <li>Not enrolled</li>
-                                <?php endif; ?>
-                            </ul>
+                            <div class="card-body p-3">
+
+
+
+    <a
+        href="student-units.php"
+        class="btn btn-sm btn-outline-primary py-0 px-3"
+        style="font-size: 0.7rem;"
+    >
+        View
+    </a>
+
+</div>
                         </div>
                     </div>
                 </div>
@@ -237,11 +241,30 @@ $topMarginClass = ($_SESSION['role'] === 'Lecturer') ? 'mt-5 pt-5' : 'mt-4';
                         <h2 class="text-info mb-3">Lecturer Control Panel</h2>
                         <p class="lead">Welcome back, Professor. Access your management tools below.</p>
                         <div class="mt-4 d-flex flex-wrap justify-content-center gap-3">
-                            <a href="manage-students.php" class="btn btn-info btn-lg">Manage Students</a>
-                            <a href="upload-content.php" class="btn btn-light btn-lg">Upload Resources</a>
-                            <a href="create-assignment.php" class="btn btn-success btn-lg fw-bold">+ Create Assignment</a>
-                            <a href="lecturer-assignments.php" class="btn btn-secondary btn-lg">My Assignments</a>
-                            <a href="lecturer-submissions.php" class="btn btn-primary btn-lg">View Submissions</a>
+<a href="lecturer-units.php"
+       class="btn btn-warning btn-lg">
+        📚 My Units
+    </a>
+
+    <a href="create-assignment.php"
+       class="btn btn-success btn-lg fw-bold">
+        + Create Assignment
+    </a>
+
+    <a href="lecturer-assignments.php"
+       class="btn btn-secondary btn-lg">
+        📝 My Assignments
+    </a>
+
+    <a href="lecturer-submissions.php"
+       class="btn btn-primary btn-lg">
+        📥 View Submissions
+    </a>
+
+    <a href="manage-students.php"
+       class="btn btn-info btn-lg">
+        👨‍🎓 Manage Students
+    </a>
                         </div>
                     </div>
                 </div>
